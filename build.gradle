@@ -3,6 +3,8 @@ plugins {
 	id 'org.springframework.boot' version '3.2.5'
 	id 'io.spring.dependency-management' version '1.1.4'
 	id "org.springdoc.openapi-gradle-plugin" version "1.7.0"
+	id "jacoco"
+	id "org.sonarqube" version "5.0.0.4638"
 
 }
 
@@ -11,6 +13,11 @@ version = '0.0.1-SNAPSHOT'
 
 java {
 	sourceCompatibility = '17'
+	targetCompatibility = '17'
+}
+
+jacoco {
+	toolVersion = "0.8.7"
 }
 
 configurations {
@@ -42,12 +49,47 @@ dependencies {
 
 jar {
 	manifest {
-		attributes 'Main-Class': 'br.com.fiap.lanchonete.LanchoneteApplication'
+		attributes 'Main-Class': 'br.com.fiap.lanchonete.pedidoservicefase4.PedidoServiceFase4Application'
 	}
 
 	from sourceSets.main.output
 }
 
-tasks.named('test') {
+test {
 	useJUnitPlatform()
+	include '**/*Test.class', '**/*Tests.class', '**/*TestSuite.class' , '**/CocumberTest.class'
+
+	testLogging {
+		events "passed", "skipped", "failed"
+		exceptionFormat = 'full'
+	}
+
+	finalizedBy jacocoTestReport
+
+}
+
+sonar {
+	properties {
+		property "sonar.projectKey", "FIAP-GRUPO-G57_pedido-service-fase-4"
+		property "sonar.organization", "fiap-grupo-g57"
+		property "sonar.host.url", "https://sonarcloud.io"
+		property "sonar.token", System.getenv("SONAR_TOKEN")
+		property("sonar.coverage.jacoco.xmlReportPaths", "${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
+	}
+}
+
+
+jacocoTestReport {
+	dependsOn test
+	reports {
+		xml.required = true
+		xml.outputLocation = file("$buildDir/reports/jacoco/test/jacocoTestReport.xml")
+
+	}
+
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: ['**/sun/**', '**/com/sun/**', '**/*$*'])
+		}))
+	}
 }
