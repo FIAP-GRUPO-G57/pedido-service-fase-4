@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Pedido {
@@ -34,6 +34,11 @@ public class Pedido {
     private String pos;
     @JsonIgnore
     private Long orderId;
+
+    public Pedido(){
+        this.itens = new ArrayList<>();
+        this.preco = BigDecimal.ZERO;
+    }
 
     @Override
     public String toString(){

@@ -52,8 +52,8 @@ public class AddItemPedidoUsecase {
 			pedido.setPreco(pedido.getPreco().add(produto.getPreco()));
 		}
 
-		return pedidoPort.save(pedido);
-
+		Pedido savedPedido = pedidoPort.save(pedido);
+		return savedPedido != null ? savedPedido : new Pedido();
 	}
 
 }

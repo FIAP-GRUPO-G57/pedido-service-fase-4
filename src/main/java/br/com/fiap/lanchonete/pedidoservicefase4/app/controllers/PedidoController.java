@@ -46,8 +46,8 @@ public class PedidoController {
 
     private final PayPedidoUsecase payPedidoUsecase;
 
-    @Autowired
-    public ModelMapper modelMapper;
+
+    public final ModelMapper modelMapper;
 
     @Autowired
     public ItemMapper itemMapper;
