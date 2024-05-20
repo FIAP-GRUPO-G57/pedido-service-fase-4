@@ -71,7 +71,18 @@ public class CheckoutPedidoUsecase {
 
 		Pedido pedidoCriado = paymentProvider.createOrderAndSetQrData(ped, itens);
 
-        return pedidoPort.checkout(ped);
+        if(pedidoCriado != null) {
+            ped.setStatus(pedidoCriado.getStatus());
+        	ped.setQrData(pedidoCriado.getQrData());
+        } else {
+        	throw new EntityNotFoundException("Erro ao criar pedido");
+        }
+
+
+        Pedido savedPedido = pedidoPort.checkout(ped);
+        return savedPedido != null ? savedPedido : new Pedido();
+
+
     }
 
     private Item buildItem(Pedido pedido) {
