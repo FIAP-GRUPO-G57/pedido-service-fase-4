@@ -1,4 +1,4 @@
-package br.com.fiap.lanchonete.validations;
+package br.com.fiap.lanchonete.pedidoservicefase4.app.validation;
 
 import java.util.List;
 

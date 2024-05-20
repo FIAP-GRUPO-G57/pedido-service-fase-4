@@ -12,7 +12,6 @@ import br.com.fiap.lanchonete.pedidoservicefase4.domain.usecase.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -49,8 +48,8 @@ public class PedidoController {
 
     public final ModelMapper modelMapper;
 
-    @Autowired
-    public ItemMapper itemMapper;
+
+    public final ItemMapper itemMapper;
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<PedidoDto> get(@PathVariable(value = "id") Long id) {

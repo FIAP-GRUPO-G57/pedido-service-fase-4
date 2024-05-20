@@ -1,4 +1,4 @@
-package br.com.fiap.lanchonete.main.exception;
+package br.com.fiap.lanchonete.pedidoservicefase4.app.exception;
 
 public class EnumValidationException extends RuntimeException{
 	private static final long serialVersionUID = 1L;

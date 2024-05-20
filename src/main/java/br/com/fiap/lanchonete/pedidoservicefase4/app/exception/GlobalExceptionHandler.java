@@ -1,7 +1,7 @@
-package br.com.fiap.lanchonete.main.exception;
+package br.com.fiap.lanchonete.pedidoservicefase4.app.exception;
 
 
-import br.com.fiap.lanchonete.validations.ValidationErrorResponse;
+import br.com.fiap.lanchonete.pedidoservicefase4.app.validation.ValidationErrorResponse;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
