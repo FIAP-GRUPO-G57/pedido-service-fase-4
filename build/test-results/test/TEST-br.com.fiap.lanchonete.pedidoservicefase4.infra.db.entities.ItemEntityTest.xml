@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="br.com.fiap.lanchonete.pedidoservicefase4.infra.db.entities.ItemEntityTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2024-05-21T01:51:34" hostname="MacBook-Air-de-Adriano.local" time="0.18">
+  <properties/>
+  <testcase name="shouldReturnCorrectId()" classname="br.com.fiap.lanchonete.pedidoservicefase4.infra.db.entities.ItemEntityTest" time="0.167"/>
+  <testcase name="shouldReturnCorrectProduto()" classname="br.com.fiap.lanchonete.pedidoservicefase4.infra.db.entities.ItemEntityTest" time="0.001"/>
+  <testcase name="shouldReturnCorrectPreco()" classname="br.com.fiap.lanchonete.pedidoservicefase4.infra.db.entities.ItemEntityTest" time="0.0"/>
+  <testcase name="shouldReturnCorrectPedido()" classname="br.com.fiap.lanchonete.pedidoservicefase4.infra.db.entities.ItemEntityTest" time="0.0"/>
+  <testcase name="toStringShouldReturnCorrectFormat()" classname="br.com.fiap.lanchonete.pedidoservicefase4.infra.db.entities.ItemEntityTest" time="0.009"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PedidoController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">pedido-service-fase-4</a> &gt; <a href="index.source.html" class="el_package">br.com.fiap.lanchonete.pedidoservicefase4.app.controllers</a> &gt; <span class="el_source">PedidoController.java</span></div><h1>PedidoController.java</h1><pre class="source lang-java linenums">package br.com.fiap.lanchonete.pedidoservicefase4.app.controllers;
+
+
+
+import br.com.fiap.lanchonete.pedidoservicefase4.app.dto.ItemDto;
+import br.com.fiap.lanchonete.pedidoservicefase4.app.dto.PedidoDto;
+import br.com.fiap.lanchonete.pedidoservicefase4.app.dto.PedidoReduceDto;
+import br.com.fiap.lanchonete.pedidoservicefase4.app.mappers.ItemMapper;
+import br.com.fiap.lanchonete.pedidoservicefase4.domain.entities.Item;
+import br.com.fiap.lanchonete.pedidoservicefase4.domain.entities.Pedido;
+import br.com.fiap.lanchonete.pedidoservicefase4.domain.usecase.*;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@RestController
+@RequestMapping(&quot;/pedidos&quot;)
+@RequiredArgsConstructor
+public class PedidoController {
+
+    private final GetPedidoByIdUsecase getPedidoByIdUsecase;
+
+    private final FindPedidoByStatusUsecase findPedidoByStatusUsecase;
+
+    private final CreatePedidoUsecase createPedidoUsecase;
+
+    private final UpdatePedidoUsecase updatePedidoUsecase;
+
+    private final AddItemPedidoUsecase addItemPedidoUsecase;
+
+    private final DeleteItemPedidoUsecase deleteItemPedidoUsecase;
+
+    private final CheckoutPedidoUsecase checkoutPedidoUsecase;
+
+    private final ConfirmPedidoUsecase confirmPedidoUsecase;
+
+    private final PayPedidoUsecase payPedidoUsecase;
+
+
+    public final ModelMapper modelMapper;
+
+
+    public final ItemMapper itemMapper;
+
+    @GetMapping(value = &quot;/{id}&quot;)
+    public ResponseEntity&lt;PedidoDto&gt; get(@PathVariable(value = &quot;id&quot;) Long id) {
+<span class="fc" id="L56">        Pedido pedido = Optional.ofNullable(getPedidoByIdUsecase.get(id))</span>
+<span class="fc" id="L57">                .orElseThrow(() -&gt; new EntityNotFoundException(&quot;Pedido nao encontrado para o id :: &quot; + id));</span>
+<span class="fc" id="L58">        return ResponseEntity.ok().body(modelMapper.map(pedido, PedidoDto.class));</span>
+    }
+
+    @PutMapping(value = &quot;/{id}&quot;)
+    public ResponseEntity&lt;PedidoDto&gt; put(@PathVariable Long id, @RequestBody PedidoDto PedidoDto) {
+<span class="fc" id="L63">        Pedido pedido = updatePedidoUsecase.update(id, modelMapper.map(PedidoDto, Pedido.class));</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        if (Objects.nonNull(pedido)) {</span>
+<span class="fc" id="L65">            return ResponseEntity.ok(modelMapper.map(pedido, PedidoDto.class));</span>
+        }
+<span class="fc" id="L67">        return ResponseEntity.notFound().build();</span>
+    }
+
+    @GetMapping
+    public ResponseEntity&lt;List&lt;PedidoReduceDto&gt;&gt; search(@RequestParam(name = &quot;status&quot;, required = false) List&lt;String&gt; status) {
+<span class="fc" id="L72">        List&lt;PedidoDto&gt; pedidos = findPedidoByStatusUsecase.findByStatus(status).stream()</span>
+<span class="fc" id="L73">                .map(pedido -&gt; modelMapper.map(pedido, PedidoDto.class))</span>
+<span class="fc" id="L74">                .toList();</span>
+<span class="fc" id="L75">        List&lt;PedidoReduceDto&gt; pp = pedidos.stream()</span>
+<span class="fc" id="L76">                .map(p -&gt; PedidoReduceDto.builder()</span>
+<span class="fc" id="L77">                        .id(p.getId())</span>
+<span class="fc" id="L78">                        .status(p.getStatus())</span>
+<span class="fc" id="L79">                        .criacao(p.getCriacao())</span>
+<span class="fc" id="L80">                        .build())</span>
+<span class="fc" id="L81">                .collect(Collectors.toList());</span>
+<span class="fc" id="L82">        return ResponseEntity.ok(pp);</span>
+    }
+
+    @PostMapping
+    public ResponseEntity&lt;PedidoDto&gt; post(@Validated @RequestBody PedidoDto PedidoDto) {
+<span class="fc" id="L87">        Pedido pedido = createPedidoUsecase.create(modelMapper.map(PedidoDto, Pedido.class));</span>
+<span class="fc" id="L88">        return new ResponseEntity&lt;PedidoDto&gt;(modelMapper.map(pedido, PedidoDto.class), HttpStatus.CREATED);</span>
+    }
+
+    @PutMapping(value = &quot;/{id}/add-items&quot;)
+    public ResponseEntity&lt;PedidoDto&gt; addItemsToPedido(@PathVariable Long id, @RequestBody List&lt;ItemDto&gt; itens) {
+<span class="fc" id="L93">        Pedido pedido = getPedidoByIdUsecase.get(id);</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        if (Objects.nonNull(pedido)) {</span>
+<span class="fc" id="L95">            List&lt;Item&gt; itensDomain = itemMapper.toDomain(itens);</span>
+<span class="fc" id="L96">            pedido = addItemPedidoUsecase.addItemPedido(id, itensDomain);</span>
+<span class="fc" id="L97">            return ResponseEntity.ok(modelMapper.map(pedido, PedidoDto.class));</span>
+        }
+
+<span class="fc" id="L100">        return ResponseEntity.notFound().build();</span>
+    }
+
+    @DeleteMapping(value = &quot;/{id}/delete-item/{idItem}&quot;)
+    public ResponseEntity&lt;PedidoDto&gt; deleteItemFromPedido(@PathVariable Long id, @PathVariable Long idItem) {
+<span class="fc" id="L105">        Pedido pedido = getPedidoByIdUsecase.get(id);</span>
+<span class="pc bpc" id="L106" title="1 of 2 branches missed.">        if (Objects.nonNull(pedido)) {</span>
+<span class="nc" id="L107">        	deleteItemPedidoUsecase.deleteItemPedido(id, idItem);</span>
+<span class="nc" id="L108">            return ResponseEntity.noContent().build();</span>
+        }
+<span class="fc" id="L110">        return ResponseEntity.notFound().build();</span>
+    }
+
+    @PatchMapping(value = &quot;/{id}/checkout&quot;)
+    public ResponseEntity&lt;PedidoDto&gt; checkoutPedido(@PathVariable Long id, @RequestParam(required = true) Long collector, @RequestParam(required = true) String pos) {
+<span class="fc" id="L115">        Pedido pedido = Pedido.builder().id(id).collector(Long.valueOf(collector)).pos(pos).build();</span>
+<span class="fc" id="L116">        Pedido ped = checkoutPedidoUsecase.checkoutPedido(pedido);</span>
+<span class="pc bpc" id="L117" title="1 of 2 branches missed.">        if (Objects.nonNull(ped)) {</span>
+<span class="nc" id="L118">            return ResponseEntity.ok(modelMapper.map(ped, PedidoDto.class));</span>
+        }
+<span class="fc" id="L120">        return ResponseEntity.noContent().build();</span>
+    }
+
+    @PostMapping(value = &quot;/notifications&quot;)
+    public ResponseEntity&lt;PedidoDto&gt; notification(@RequestParam(name = &quot;id&quot;) Long id, @RequestParam(name = &quot;topic&quot;) String topic) {
+<span class="fc" id="L125">        Pedido pedido = Pedido.builder().orderId(id).paymentId(id).build();</span>
+<span class="pc bpc" id="L126" title="1 of 4 branches missed.">        if ((&quot;merchant_order&quot;).equals(topic) &amp;&amp; Objects.nonNull(id)) {</span>
+<span class="fc" id="L127">            pedido = confirmPedidoUsecase.confirmPedido(pedido);</span>
+        }
+<span class="pc bpc" id="L129" title="1 of 4 branches missed.">        if ((&quot;payment&quot;).equals(topic) &amp;&amp; Objects.nonNull(id)) {</span>
+<span class="fc" id="L130">            pedido = payPedidoUsecase.payPedido(pedido);</span>
+        }
+<span class="fc" id="L132">        return ResponseEntity.ok(modelMapper.map(pedido, PedidoDto.class));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

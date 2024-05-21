@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CheckoutPedidoUsecase.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">pedido-service-fase-4</a> &gt; <a href="index.source.html" class="el_package">br.com.fiap.lanchonete.pedidoservicefase4.domain.usecase</a> &gt; <span class="el_source">CheckoutPedidoUsecase.java</span></div><h1>CheckoutPedidoUsecase.java</h1><pre class="source lang-java linenums">package br.com.fiap.lanchonete.pedidoservicefase4.domain.usecase;
+
+
+import br.com.fiap.lanchonete.pedidoservicefase4.domain.entities.Pedido;
+import br.com.fiap.lanchonete.pedidoservicefase4.domain.enums.StatusEnum;
+import br.com.fiap.lanchonete.pedidoservicefase4.domain.ports.PedidoRepositoryPort;
+
+import br.com.fiap.lanchonete.pedidoservicefase4.domain.provider.PaymentProvider;
+import br.com.fiap.lanchonete.pedidoservicefase4.infra.pagamentoAdapter.dto.order.Item;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+
+import org.apache.commons.lang3.math.NumberUtils;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Objects;
+
+@Service
+@Transactional
+@RequiredArgsConstructor
+public class CheckoutPedidoUsecase {
+
+	private static final String DESCRIPTION = &quot;This is the Point Mini&quot;;
+	private static final String TITLE = &quot;Point Mini&quot;;
+	private static final String CATEGORY = &quot;marketplace&quot;;
+	private static final String UNIT = &quot;unit&quot;;
+
+	private final PedidoRepositoryPort pedidoPort;
+
+	private final PaymentProvider paymentProvider;
+
+	//private final MercadoPagoRestClient orderRestClient;
+
+	//private final GatewayPaymentConfiguration gatewayPayment;
+
+    public Pedido checkoutPedido(Pedido pedido) {
+<span class="fc" id="L39">        Pedido ped = pedidoPort.get(pedido.getId());</span>
+
+<span class="fc bfc" id="L41" title="All 2 branches covered.">        if (Objects.isNull(ped))</span>
+<span class="fc" id="L42">            throw new EntityNotFoundException(&quot;Pedido nao encontrado para o id :: &quot; + pedido.getId());</span>
+
+<span class="fc bfc" id="L44" title="All 2 branches covered.">        if (!ped.getStatus().equals(StatusEnum.CRIADO))</span>
+<span class="fc" id="L45">            throw new EntityNotFoundException(&quot;Pedido já encaminhado nao pode ser mais alterado :: &quot; + pedido.getId());</span>
+
+<span class="fc" id="L47">        ped.setCollector(pedido.getCollector());</span>
+<span class="fc" id="L48">        ped.setPos(pedido.getPos());</span>
+<span class="fc" id="L49">        ped.setStatus(StatusEnum.PENDING);</span>
+
+<span class="fc" id="L51">        ArrayList&lt;Item&gt; itens = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L52">		itens.add(buildItem(ped));</span>
+
+
+		/*
+
+
+		Order order = Order.builder()
+				.cashOut(CashOut.builder().amount(new BigDecimal(NumberUtils.INTEGER_ZERO)).build())
+				.description(DESCRIPTION).externalReference(pedido.getId().toString()).items(itens)
+				.notificationUrl(gatewayPayment.getNotification()).title(TITLE).totalAmount(ped.getPreco()).build();
+
+
+				System.out.println(&quot; totalammount::: &quot; + ped.getPreco());
+
+		String qrData = orderRestClient.getPaymentQrCode(order, pedido.getCollector(), pedido.getPos(),
+				gatewayPayment.getToken());
+		ped.setQrData(qrData);
+
+		 */
+
+<span class="fc" id="L72">		Pedido pedidoCriado = paymentProvider.createOrderAndSetQrData(ped, itens);</span>
+
+<span class="pc bpc" id="L74" title="1 of 2 branches missed.">        if(pedidoCriado != null) {</span>
+<span class="fc" id="L75">            ped.setStatus(pedidoCriado.getStatus());</span>
+<span class="fc" id="L76">        	ped.setQrData(pedidoCriado.getQrData());</span>
+        } else {
+<span class="nc" id="L78">        	throw new EntityNotFoundException(&quot;Erro ao criar pedido&quot;);</span>
+        }
+
+
+<span class="fc" id="L82">        Pedido savedPedido = pedidoPort.checkout(ped);</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">        return savedPedido != null ? savedPedido : new Pedido();</span>
+
+
+    }
+
+    private Item buildItem(Pedido pedido) {
+<span class="fc" id="L89">		return Item.builder().skuNumber(paymentProvider.getSku()).category(CATEGORY).title(TITLE)</span>
+<span class="fc" id="L90">				.description(DESCRIPTION).unitPrice(pedido.getPreco()).quantity(NumberUtils.INTEGER_ONE)</span>
+<span class="fc" id="L91">				.unitMeasure(UNIT).totalAmount(pedido.getPreco()).build();</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

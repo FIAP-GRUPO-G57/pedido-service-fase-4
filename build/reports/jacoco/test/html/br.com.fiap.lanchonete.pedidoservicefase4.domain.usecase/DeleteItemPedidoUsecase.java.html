@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DeleteItemPedidoUsecase.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">pedido-service-fase-4</a> &gt; <a href="index.source.html" class="el_package">br.com.fiap.lanchonete.pedidoservicefase4.domain.usecase</a> &gt; <span class="el_source">DeleteItemPedidoUsecase.java</span></div><h1>DeleteItemPedidoUsecase.java</h1><pre class="source lang-java linenums">package br.com.fiap.lanchonete.pedidoservicefase4.domain.usecase;
+
+import br.com.fiap.lanchonete.pedidoservicefase4.domain.entities.Item;
+import br.com.fiap.lanchonete.pedidoservicefase4.domain.entities.Pedido;
+import br.com.fiap.lanchonete.pedidoservicefase4.domain.enums.StatusEnum;
+import br.com.fiap.lanchonete.pedidoservicefase4.domain.ports.ItemPedidoRepositoryPort;
+import br.com.fiap.lanchonete.pedidoservicefase4.domain.ports.PedidoRepositoryPort;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.Objects;
+
+@Service
+@Transactional
+@RequiredArgsConstructor
+public class DeleteItemPedidoUsecase {
+
+	private final PedidoRepositoryPort pedidoPort;
+
+	private final ItemPedidoRepositoryPort itemPedidoPort;
+
+	public void deleteItemPedido(Long id, Long idItem) {
+<span class="fc" id="L25">		Pedido pedido = pedidoPort.get(id);</span>
+
+<span class="fc bfc" id="L27" title="All 2 branches covered.">		if (Objects.isNull(pedido))</span>
+<span class="fc" id="L28">			throw new EntityNotFoundException(&quot;Pedido nao encontrado para o id :: &quot; + id);</span>
+
+<span class="fc bfc" id="L30" title="All 2 branches covered.">		if (!pedido.getStatus().equals(StatusEnum.CRIADO))</span>
+<span class="fc" id="L31">			throw new EntityNotFoundException(&quot;Pedido já encaminhado nao pode ser mais alterado :: &quot; + id);</span>
+
+<span class="fc" id="L33">		Item item = pedido.getItens().stream().filter(i -&gt; i.getId().equals(idItem)).findFirst().orElse(null);</span>
+<span class="fc bfc" id="L34" title="All 2 branches covered.">		if (Objects.isNull(item))</span>
+<span class="fc" id="L35">			throw new EntityNotFoundException(&quot;Item nao encontrado para o id :: &quot; + idItem);</span>
+
+<span class="fc" id="L37">		pedido.getItens().remove(item);</span>
+<span class="fc" id="L38">		pedido.setPreco(pedido.getPreco().subtract(item.getPreco()));</span>
+<span class="fc" id="L39">		itemPedidoPort.deleteItemPedido(item.getId());</span>
+<span class="fc" id="L40">		pedidoPort.save(pedido);</span>
+<span class="fc" id="L41">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

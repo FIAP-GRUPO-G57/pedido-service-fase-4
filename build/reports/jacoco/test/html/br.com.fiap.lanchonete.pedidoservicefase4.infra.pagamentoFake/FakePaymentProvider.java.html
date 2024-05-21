@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FakePaymentProvider.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">pedido-service-fase-4</a> &gt; <a href="index.source.html" class="el_package">br.com.fiap.lanchonete.pedidoservicefase4.infra.pagamentoFake</a> &gt; <span class="el_source">FakePaymentProvider.java</span></div><h1>FakePaymentProvider.java</h1><pre class="source lang-java linenums">package br.com.fiap.lanchonete.pedidoservicefase4.infra.pagamentoFake;
+
+import br.com.fiap.lanchonete.pedidoservicefase4.domain.entities.OrdemPedido;
+import br.com.fiap.lanchonete.pedidoservicefase4.domain.entities.Pedido;
+import br.com.fiap.lanchonete.pedidoservicefase4.domain.provider.PaymentProvider;
+import br.com.fiap.lanchonete.pedidoservicefase4.infra.pagamentoAdapter.dto.order.Item;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+
+@Service
+<span class="fc" id="L12">public class FakePaymentProvider implements PaymentProvider {</span>
+    @Override
+    public Pedido createOrderAndSetQrData(Pedido pedido, ArrayList&lt;Item&gt; itens) {
+        // Here you can set the properties of the returned Pedido object as per your requirements
+<span class="nc" id="L16">        Pedido pedidoCriado = new Pedido();</span>
+<span class="nc" id="L17">        pedidoCriado.setId(pedido.getId());</span>
+<span class="nc" id="L18">        pedidoCriado.setStatus(pedido.getStatus());</span>
+<span class="nc" id="L19">        pedidoCriado.setQrData(&quot;fakeQrData&quot;);</span>
+<span class="nc" id="L20">        return pedidoCriado;</span>
+    }
+
+    @Override
+    public OrdemPedido getOrderFromPayment(Pedido pedido) {
+        // Here you can set the properties of the returned OrdemPedido object as per your requirements
+<span class="nc" id="L26">        OrdemPedido ordemPedido = new OrdemPedido(pedido.getId(), &quot;PENDING&quot;);</span>
+<span class="nc" id="L27">        return ordemPedido;</span>
+    }
+
+    @Override
+    public OrdemPedido getMerchantOrder(Pedido pedido) {
+        // Here you can set the properties of the returned OrdemPedido object as per your requirements
+<span class="nc" id="L33">        OrdemPedido ordemPedido = new OrdemPedido(pedido.getId(), &quot;PENDING&quot;);</span>
+<span class="nc" id="L34">        return ordemPedido;</span>
+    }
+
+    @Override
+    public String getSku() {
+<span class="nc" id="L39">        return &quot;fakeSku&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
