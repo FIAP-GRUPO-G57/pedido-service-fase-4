@@ -31,6 +31,11 @@ graph TB
     classDef async stroke:#f66,stroke-width:2px,stroke-dasharray: 5, 5;
     class PedidoAPI,PagamentoAPI,ProducaoAPI async;
 
+SonarCloud: https://sonarcloud.io/summary/overall?id=FIAP-GRUPO-G57_pedido-service-fase-4
+
+![image](https://github.com/FIAP-GRUPO-G57/pedido-service-fase-4/assets/30375651/a8f94ef5-4ac7-4d3c-b53a-dde25e562973)
+
+
 
 ```
 
