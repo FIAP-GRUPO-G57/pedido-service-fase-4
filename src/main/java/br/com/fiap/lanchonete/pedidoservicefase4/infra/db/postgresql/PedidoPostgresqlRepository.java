@@ -70,7 +70,7 @@ public class PedidoPostgresqlRepository implements PedidoRepositoryPort {
 	public Pedido confirm(Pedido pedido, OrdemPedido ordemPedido) {
 		if (Objects.nonNull(ordemPedido)) {
 			Pedido ped = pedidoRepository.findById(ordemPedido.getIdExterno())
-					.map(pedidoData -> modelMapper.map(pedidoData, Pedido.class)).orElse(null);
+					.map(pedidoData -> modelMapper.map(pedidoData, Pedido.class)).orElse(new Pedido());
 			ped.setExternalReference(pedido.getOrderId());
 			ped.setStatus(StatusEnum.CONFIRMADO);
 			PedidoEntity pedidoSchema = modelMapper.map(ped, PedidoEntity.class);
@@ -84,7 +84,8 @@ public class PedidoPostgresqlRepository implements PedidoRepositoryPort {
 	public Pedido pay(Pedido pedido, OrdemPedido ordemPedido) {
 		if (Objects.nonNull(ordemPedido)) {
 			Pedido ped = pedidoRepository.findById(ordemPedido.getIdExterno())
-					.map(pedidoData -> modelMapper.map(pedidoData, Pedido.class)).orElse(null);
+					.map(pedidoData -> modelMapper.map(pedidoData, Pedido.class)).orElse(new Pedido());
+
 			ped.setPaymentId(pedido.getPaymentId());
 			if ("approved".equals(ordemPedido.getStatus())) {
 				ped.setStatus(StatusEnum.RECEBIDO);

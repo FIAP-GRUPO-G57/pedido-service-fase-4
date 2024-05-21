@@ -27,7 +27,7 @@ public class PayPedidoUsecase {
 
     public Pedido payPedido(Pedido pedido) {
         if (Objects.isNull(pedido) || Objects.isNull(pedido.getPaymentId()))
-            throw new EntityNotFoundException("Payment nao encontrado para o id :: " + pedido.getPaymentId());
+            throw new EntityNotFoundException("Payment nao encontrado para o id nulo :: " );
 
        // OrdemPedido ordemPedido = paymentGatewayPort.getPayment(pedido.getPaymentId(), gatewayPayment.getToken());
 

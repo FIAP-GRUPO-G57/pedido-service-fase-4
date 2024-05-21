@@ -112,7 +112,7 @@ public class PedidoController {
 
     @PatchMapping(value = "/{id}/checkout")
     public ResponseEntity<PedidoDto> checkoutPedido(@PathVariable Long id, @RequestParam(required = true) Long collector, @RequestParam(required = true) String pos) {
-        Pedido pedido = Pedido.builder().id(id).collector(Long.valueOf(collector)).pos(pos).build();
+        Pedido pedido = Pedido.builder().id(id).collector(collector).pos(pos).build();
         Pedido ped = checkoutPedidoUsecase.checkoutPedido(pedido);
         if (Objects.nonNull(ped)) {
             return ResponseEntity.ok(modelMapper.map(ped, PedidoDto.class));
