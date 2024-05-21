@@ -2,21 +2,25 @@
 Serviço Pedido da Fase 4 do Tech Challenge
 
 
+
 ```mermaid
 graph TB
     subgraph Pedido
         PedidoDB[(Database SQL<br>Pedido)]
         PedidoAPI["Pedido API"]
+
     end
 
     subgraph Pagamento
         PagamentoDB[(Database NoSQL<br>Pagamento)]
         PagamentoAPI["Pagamento API"]
+
     end
 
     subgraph Produção
         ProducaoDB[(Database SQL<br>Produção)]
         ProducaoAPI["Produção API"]
+
     end
 
     PedidoAPI -.->|Mensagem via fila| PagamentoAPI
@@ -29,6 +33,7 @@ graph TB
 
 
 ```
+
 
 
 
