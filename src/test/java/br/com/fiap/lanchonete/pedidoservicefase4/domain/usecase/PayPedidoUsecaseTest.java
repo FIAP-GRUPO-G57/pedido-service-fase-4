@@ -60,7 +60,7 @@ public class PayPedidoUsecaseTest {
 
     @Test
     public void payPedido_PedidoIsNull() {
-        assertThrows(NullPointerException.class, () -> {
+        assertThrows(EntityNotFoundException.class, () -> {
             payPedidoUsecase.payPedido(null);
         });
     }
