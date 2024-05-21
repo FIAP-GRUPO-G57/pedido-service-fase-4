@@ -68,7 +68,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-    private static class ErrorResponse {
+    public static class ErrorResponse {
         private String message;
 
         public ErrorResponse(String message) {
