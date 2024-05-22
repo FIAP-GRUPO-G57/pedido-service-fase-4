@@ -5,19 +5,22 @@ import br.com.fiap.lanchonete.pedidoservicefase4.domain.entities.Produto;
 import br.com.fiap.lanchonete.pedidoservicefase4.domain.provider.ProdutoProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Component
 public class ProdutoAdapter implements ProdutoProvider {
 
-    private final WebClient webClient;
+    private final RestTemplate restTemplate;
 
     @Value("${product.service.url}")
     private String productServiceUrl;
 
 
-    public ProdutoAdapter(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl(productServiceUrl).build();
+    public ProdutoAdapter(RestTemplate restTemplate) {
+
+
+        this.restTemplate = restTemplate;
     }
 
 
@@ -32,11 +35,8 @@ public class ProdutoAdapter implements ProdutoProvider {
         //Caso não encontre o produto, retornar null
         //Utilizar Webclient para realizar a chamada para o serviço de produtos
 
-                ProdutoDto produtoDto = webClient.get()
-                .uri("/produto/{id}", id)
-                .retrieve()
-                .bodyToMono(ProdutoDto.class)
-                .block();
+        ProdutoDto produtoDto = restTemplate.getForObject(productServiceUrl + "/produtos/{id}", ProdutoDto.class, id);
+
 
         if (produtoDto == null) {
             return null;
@@ -47,9 +47,9 @@ public class ProdutoAdapter implements ProdutoProvider {
         return fromDTO(produtoDto);
     }
 
-    private Produto fromDTO(ProdutoDto produtoDto) {
+    public Produto fromDTO(ProdutoDto produtoDto) {
         return Produto.builder()
-                .id(produtoDto.getId())
+                .id(produtoDto.getId().longValue())
                 .nome(produtoDto.getNome())
                 .descricao(produtoDto.getDescricao())
                 .preco(produtoDto.getPreco())

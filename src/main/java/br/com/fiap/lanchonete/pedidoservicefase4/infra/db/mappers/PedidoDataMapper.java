@@ -1,7 +1,9 @@
 package br.com.fiap.lanchonete.pedidoservicefase4.infra.db.mappers;
 
 
+import br.com.fiap.lanchonete.pedidoservicefase4.domain.entities.Cliente;
 import br.com.fiap.lanchonete.pedidoservicefase4.domain.entities.Pedido;
+import br.com.fiap.lanchonete.pedidoservicefase4.domain.entities.Produto;
 import br.com.fiap.lanchonete.pedidoservicefase4.infra.db.entities.PedidoEntity;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -20,6 +22,14 @@ public class PedidoDataMapper {
 	}
 
 	public PedidoEntity toData(Pedido pedido) {
+		if (modelMapper.getTypeMap(Produto.class, Long.class) == null) {
+			modelMapper.createTypeMap(Produto.class, Long.class)
+					.setConverter(context -> context.getSource().getId());
+		}
+		if (modelMapper.getTypeMap(Cliente.class, Long.class) == null) {
+			modelMapper.createTypeMap(Cliente.class, Long.class)
+					.setConverter(context -> context.getSource().getId());
+		}
 		return modelMapper.map(pedido, PedidoEntity.class);
 	}
 	
