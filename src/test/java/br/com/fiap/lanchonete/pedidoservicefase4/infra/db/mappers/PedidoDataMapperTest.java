@@ -1,5 +1,6 @@
 package br.com.fiap.lanchonete.pedidoservicefase4.infra.db.mappers;
 
+import br.com.fiap.lanchonete.pedidoservicefase4.domain.entities.Cliente;
 import br.com.fiap.lanchonete.pedidoservicefase4.domain.entities.Pedido;
 import br.com.fiap.lanchonete.pedidoservicefase4.infra.db.entities.PedidoEntity;
 import br.com.fiap.lanchonete.pedidoservicefase4.infra.db.mappers.PedidoDataMapper;
@@ -37,6 +38,9 @@ public class PedidoDataMapperTest {
         Pedido pedido = new Pedido();
         // set properties for pedido
         pedido.setId(1L);
+        Cliente cliente = new Cliente();
+        cliente.setId(1L);
+        pedido.setCliente(cliente);
 
         PedidoEntity pedidoEntity = pedidoDataMapper.toData(pedido);
 

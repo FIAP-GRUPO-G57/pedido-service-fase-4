@@ -27,7 +27,7 @@ public class ItemEntity {
     @NotNull
     private PedidoEntity pedido;
 
-    @JoinColumn(name = "produto_id")
+    @Column(name = "produto_id")
     @NotNull
     private Long produto;
 
