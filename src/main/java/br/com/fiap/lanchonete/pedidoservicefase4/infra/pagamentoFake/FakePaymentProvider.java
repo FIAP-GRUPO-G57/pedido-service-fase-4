@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 
-@Service
+
 public class FakePaymentProvider implements PaymentProvider {
     @Override
     public Pedido createOrderAndSetQrData(Pedido pedido, ArrayList<Item> itens) {

@@ -166,7 +166,7 @@ public class PedidoControllerTest {
     public void checkoutPedido_ReturnsNoContent_WhenCheckoutFails() {
         when(checkoutPedidoUsecase.checkoutPedido(any(Pedido.class))).thenReturn(null);
 
-        ResponseEntity<PedidoDto> result = pedidoController.checkoutPedido(1L, 1L, "pos");
+        ResponseEntity<PedidoDto> result = pedidoController.checkoutPedido(1L);
 
         assertEquals(HttpStatus.NO_CONTENT, result.getStatusCode());
     }

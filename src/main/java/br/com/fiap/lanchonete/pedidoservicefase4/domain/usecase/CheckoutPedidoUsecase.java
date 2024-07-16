@@ -86,7 +86,7 @@ public class CheckoutPedidoUsecase {
     }
 
     private Item buildItem(Pedido pedido) {
-		return Item.builder().skuNumber(paymentProvider.getSku()).category(CATEGORY).title(TITLE)
+		return Item.builder().skuNumber(null).category(CATEGORY).title(TITLE)
 				.description(DESCRIPTION).unitPrice(pedido.getPreco()).quantity(NumberUtils.INTEGER_ONE)
 				.unitMeasure(UNIT).totalAmount(pedido.getPreco()).build();
 	}
