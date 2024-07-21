@@ -74,6 +74,8 @@ public class CheckoutPedidoUsecase {
         if(pedidoCriado != null) {
             ped.setStatus(pedidoCriado.getStatus());
         	ped.setQrData(pedidoCriado.getQrData());
+			ped.setExternalReference(pedidoCriado.getExternalReference());
+			ped.setPaymentId(pedidoCriado.getPaymentId());
         } else {
         	throw new EntityNotFoundException("Erro ao criar pedido");
         }

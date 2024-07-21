@@ -16,9 +16,12 @@ public class RestTemplateConfig {
 
         RestTemplate restTemplate = new RestTemplate();
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE);
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter(objectMapper);
         restTemplate.getMessageConverters().add(0, converter);  // Add the converter to the beginning
+
+        restTemplate.getInterceptors().add(new LogginInterceptor());
+   
         return restTemplate;
 
 

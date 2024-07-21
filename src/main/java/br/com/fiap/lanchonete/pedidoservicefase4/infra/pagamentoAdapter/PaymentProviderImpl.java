@@ -60,7 +60,8 @@ public class PaymentProviderImpl implements PaymentProvider {
 
 
         pedido.setQrData(paymentOrderDtoResponse.getQrcode());
-        pedido.setExternalReference(paymentOrderDtoResponse.getPaymentId());
+        pedido.setExternalReference(paymentOrderDtoResponse.getReference());
+        pedido.setPaymentId(paymentOrderDtoResponse.getId());
 
 
 
